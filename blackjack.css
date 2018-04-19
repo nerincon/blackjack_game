@@ -1,0 +1,85 @@
+body {
+    background-image: url("bricks.jpg");
+    background-size: cover;
+    font-family: 'Aldrich', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    padding-top: 10px;
+}
+
+#table {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: lightgreen;
+    margin-left: 26%;
+    margin-right: 25%;
+    margin-top: 1.5%;
+    width: 40em;
+    height: 30em;
+    border-radius: 2%;
+    border: 3px solid black;
+    box-shadow: 5px 10px 8px 10px #888888;
+    overflow: hidden;
+}
+
+#dealer {
+    padding-top:5em;
+    padding-right: 32em;
+
+}
+
+#dealer-hand {
+    background-color: rgb(84, 255, 62);
+    width: 33em;
+    height: 7em;
+    border: 2px solid black;
+    position: absolute;
+    margin-top: 7em;
+    margin-left: 2.6em;
+}
+
+#player {
+    padding-top:10em;
+    padding-right: 32em;
+}
+
+#player-hand {
+    background-color: rgb(84, 255, 62);
+    width: 33em;
+    height: 7em;
+    border: 2px solid black;
+    position: absolute;
+    margin-top: 18em;
+    margin-left: 2.6em;
+}
+
+.buttons {
+    position: absolute;
+    padding-top: 27em;
+    padding-left: 16em;
+    border-radius: 5%;
+}
+
+#deal-button {
+    background-color: dodgerblue;
+    font-size: 16px;
+    color: white;
+    padding: 4px;
+}
+
+#hit-button {
+    background-color: dodgerblue;
+    font-size: 16px;
+    color: white;
+    padding: 4px;
+}
+
+#stand-button {
+    background-color: dodgerblue;
+    font-size: 16px;
+    color: white;
+    padding: 4px;
+}
