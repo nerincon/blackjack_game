@@ -1,3 +1,29 @@
+var player_points = 0
+var dealer_points = 0
+
+$(document).ready(function() {
+    $('.foo').click(function () {
+        var elem = event.target.id
+        if (elem === 'deal-button'){
+            deal();
+            var input = this;
+            input.disabled = true;
+            $(this).css('background-color','gray');}
+        else if (elem === 'hit-button'){
+            hit();
+        } else {
+            stand();
+        }
+        displayPoints();
+    });
+});
+
+var playerHand = []
+var dealerHand = []
+// var Currenthand = new shuffle(Deck());
+
+
+
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
   
@@ -16,48 +42,74 @@ function shuffle(array) {
   
     return array;
   }
-  
-  // Used like so
-//   var arr = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-//   arr = shuffle(arr)[0];
-//   console.log(arr);
 
-function card(value, name, suit){
+
+function displayPoints(){
+    return playerHand, dealerHand
+}
+
+function Card(value, name, suit){
 	this.value = value;
 	this.name = name;
 	this.suit = suit;
 }
 
-function deck(){
+Card.prototype.getImageUrl = function(){
+    var type = this.value;
+
+    if (this.value === 1)  {type = 'A';}
+    if (this.value === 11) {type= 'J';}
+    if (this.value === 12) {type = 'Q';}
+    if (this.value === 13) {type = 'K';}
+
+    return '<img class="cards" src="./img/' + type + '_of_' + this.suit + '.png">';
+};
+
+
+function Deck(){
 	this.names = ['A','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 	this.suits = ['hearts','diamonds','spades','clubs'];
-	var cards = [];
+	this.cards = [];
     
     for( var s = 0; s < this.suits.length; s++ ) {
         for( var n = 0; n < this.names.length; n++ ) {
-            cards.push( new card( n+1, this.names[n], this.suits[s] ) );
+            this.cards.push( new Card( n+1, this.names[n], this.suits[s] ) );
         }
     }
-    return cards;
+    // return cards;
 }
 
-arr = shuffle(deck());
-// console.log(arr[0]);
-// console.log(arr[0]['value']);
-// console.log(arr[0]['name']);
-// console.log(arr[0]['suit']);
+Deck.prototype.draw = function(person) {
+    console.log('test')
+    var cardObject;
+    var randomIndex = parseInt(Math.random() * (this.cards.length));
+    cardObject = this.cards[randomIndex];
+    console.log(cardObject)
+
+    if (person === 'player') {
+        playerHand.push(cardObject);
+        cardToPlay = cardObject.getImageUrl();
+        $('#player-hand').append(cardToPlay);
+    } else {
+        dealerHand.push(cardObject);
+        cardToPlay = cardObject.getImageUrl();
+        $('#dealer-hand').append(cardToPlay);
+    }
+      this.cards.splice(randomIndex, 1);
+    //   console.log(this.cards)
+  
+    return cardObject
+};
 
 
-$(document).ready(function () {
-    $('#deal-button').click(function () {
-        arr = shuffle(deck());
-        var arr1 = arr[0]['name']
-        console.log(arr1)
-        var arr2 = arr[0]['suit']
-        console.log(arr2)
-        $('#dealer-hand').append('<img class="cards" src="./img/' + arr1 + '_of_' + arr2 + '.png">')
-    });
-});
+function deal() {
 
-
+    // Deal 4 cards
+    var deck = new Deck();
+    console.log(deck)
+    deck.draw('player');
+    deck.draw('dealer');
+    deck.draw('player');
+    deck.draw('dealer');
+}
 
