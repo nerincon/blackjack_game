@@ -1,6 +1,3 @@
-var player_points = 0
-var dealer_points = 0
-
 $(document).ready(function() {
     $('.foo').click(function () {
         var elem = event.target.id
@@ -13,14 +10,16 @@ $(document).ready(function() {
             hit();
         } else {
             stand();
+            Winner();
         }
+        refresh();
         displayPoints();
+        Over();
     });
 });
 
 var playerHand = []
 var dealerHand = []
-// var Currenthand = new shuffle(Deck());
 
 
 
@@ -43,9 +42,46 @@ function shuffle(array) {
     return array;
   }
 
+function Winner(){
+    if(total > total2){
+        console.log('player wins')
+    } else if (total2 > total) {
+        console.log('dealer wins')
+    }
+}
+
+function Over(){
+    if(total > 21){
+        console.log('Over 21, You lose!')
+        refresh()
+        $('#player-hand').empty()
+        $('#dealer-hand').empty()
+        $('#deal-button').prop("disabled",false);
+        $('#hit-button').prop("disabled",true);
+        $('#deal-button').css('background-color','dodgerblue')
+        swal({
+            title: "Over 21, You lose!",
+            text: "Play Again?",
+            // imageUrl: "img/chip.png"
+          });
+
+    }else {
+        console.log('keep going')
+        console.log(total)
+    }
+}
+
 
 function displayPoints(){
-    return playerHand, dealerHand
+    total = Object.values(playerHand).reduce((t, n) => t + n.value, 0)
+    $('#score_p').append(total)
+    total2 = Object.values(dealerHand).reduce((t, n) => t + n.value, 0)
+    $('#score_d').append(total2)
+}
+
+function refresh(){
+    $('#score_p').empty()
+    $('#score_d').empty()
 }
 
 function Card(value, name, suit){
@@ -101,15 +137,24 @@ Deck.prototype.draw = function(person) {
     return cardObject
 };
 
-
+var deck = new Deck();
 function deal() {
 
     // Deal 4 cards
-    var deck = new Deck();
+    // var deck = new Deck();
     console.log(deck)
     deck.draw('player');
     deck.draw('dealer');
     deck.draw('player');
     deck.draw('dealer');
+}
+
+function hit() {
+    deck.draw('player');
+}
+
+function stand(){
+    $('#hit-button').prop("disabled",true);
+    $('#hit-button').css('background-color','gray');
 }
 

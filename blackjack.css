@@ -27,7 +27,7 @@ h1 {
 
 #dealer {
     padding-top:5em;
-    padding-right: 32em;
+    padding-right: 30em;
 
 }
 
@@ -43,7 +43,7 @@ h1 {
 
 #player {
     padding-top:10em;
-    padding-right: 32em;
+    padding-right: 30em;
 }
 
 #player-hand {
@@ -87,4 +87,8 @@ h1 {
 .cards {
     height:7em;
     display: inline-block;
+}
+
+.score{
+    padding-left:2px;
 }

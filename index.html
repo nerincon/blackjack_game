@@ -8,6 +8,8 @@
     src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
     crossorigin="anonymous"></script>
+    <script src="./sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./sweetalert2.css">
     <script src="./blackjack.js"></script>
     <link rel="stylesheet" href="./blackjack.css">
     <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet">
@@ -17,11 +19,11 @@
     <h1>Blackjack</h1>
     <div id="table">
         <div id="messages"></div>
-        <label id='dealer'>Dealer: </label>
+        <label id='dealer'>Dealer: <span id="score_d"></span></label>
         <label id="dealer-points" class="points"></label>
         <div id="dealer-hand" class="hand">
         </div>
-        <label id='player'>Player: </label>
+        <label id='player'>Player: <span id="score_p"></span></label>
         <label id="player-points" class="points"></label>
         <div id="player-hand" class="hand">
         </div>
