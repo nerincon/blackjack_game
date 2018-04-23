@@ -79,6 +79,8 @@ function over(){
         refresh()
         $('#display').empty()
         $('#display').append('<h3>Player over 21! YOU LOSE!</h3>');
+        console.log(playerHand);
+        console.log(total)
         $('#deal-button').prop("disabled",false);
         // $('#hit-button').prop("disabled",true);
         $('#deal-button').css('background-color','dodgerblue')
@@ -106,9 +108,9 @@ function over(){
 
 function displayPoints(){
     console.log(playerHand)
-    total = Object.values(playerHand).reduce((t, n) => t + n.value, 0)
+    total = Object.values(playerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
     $('#score_p').append(total)
-    total2 = Object.values(dealerHand).reduce((t, n) => t + n.value, 0)
+    total2 = Object.values(dealerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
     $('#score_d').append(total2)
 }
 
@@ -124,28 +126,22 @@ function Card(value, name, suit){
 }
 
 Card.prototype.getImageUrl = function(){
-    var type = this.value;
-
-    if (this.value === 1)  {type = 'A';}
-    if (this.value === 11) {type= 'J';}
-    if (this.value === 12) {type = 'Q';}
-    if (this.value === 13) {type = 'K';}
-
-    return '<img class="cards" src="./img/' + type + '_of_' + this.suit + '.png">';
+    var name = this.name;
+    return '<img class="cards" src="./img/' + name + '_of_' + this.suit + '.png">';
 };
 
 
 function Deck(){
-	this.names = ['A','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-	this.suits = ['hearts','diamonds','spades','clubs'];
-	this.cards = [];
-    
+    this.names = {'A': 1,'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7':7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10};
+    this.suits = ['hearts','diamonds','spades','clubs'];
+    this.cards = [];
+
     for( var s = 0; s < this.suits.length; s++ ) {
-        for( var n = 0; n < this.names.length; n++ ) {
-            this.cards.push( new Card( n+1, this.names[n], this.suits[s] ) );
+        for (const [key, value] of Object.entries(this.names)) {
+            this.cards.push( new Card( `${value}`, `${key}`, this.suits[s] ) );
         }
     }
-    // return cards;
+    // console.log(this.cards);
 }
 
 Deck.prototype.draw = function(person) {
