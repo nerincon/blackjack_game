@@ -1,20 +1,28 @@
 $(document).ready(function() {
+    // welcome()
+    begin()
     $('.foo').click(function () {
         var elem = event.target.id
         if (elem === 'deal-button'){
+            deck = new Deck()
+            $('#display').empty()
+            $('#display').append("<h3>Let's Play Some Blackjack!</h3>")
+            $('#player-hand').children().remove();
+            $('#dealer-hand').children().remove();
             deal();
             var input = this;
             input.disabled = true;
-            $(this).css('background-color','gray');}
-        else if (elem === 'hit-button'){
+            $(this).css('background-color','gray');
+            after();
+        }else if (elem === 'hit-button'){
             hit();
         } else {
             stand();
-            Winner();
+            // winner();
         }
         refresh();
         displayPoints();
-        Over();
+        over();
     });
 });
 
@@ -23,48 +31,72 @@ var dealerHand = []
 
 
 
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-  
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-  
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-  
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-  
-    return array;
-  }
-
-function Winner(){
-    if(total > total2){
+function winner(){
+    if(total ===21 && total2 === 21 || total2 > 21){
         console.log('player wins')
+        $('#display').empty()
+        $('#display').append('<h3>PLAYER WINS!</h3>');
+    } 
+    else if(total > total2){
+        console.log('player wins')
+        $('#display').empty()
+        $('#display').append('<h3>PLAYER WINS!</h3>');
     } else if (total2 > total) {
         console.log('dealer wins')
+        $('#display').empty()
+        $('#display').append('<h3>DEALER WINS!</h3>');
+    } else {
+        swal({
+            title: "Draw!",
+          });
     }
+    // $('#player-hand').children().remove();
+    // $('#dealer-hand').children().remove();
+    $('#deal-button').prop("disabled",false);
+    $('#deal-button').css('background-color','dodgerblue')
+    playerHand = []
+    dealerHand = []
+    displayPoints()
+    begin()
 }
 
-function Over(){
-    if(total > 21){
+function over(){
+    if(total === 21){
+        refresh()
+        $('#player-hand').children().remove();
+        $('#dealer-hand').children().remove();
+        $('#deal-button').prop("disabled",false);
+        // $('#hit-button').prop("disabled",true);
+        $('#deal-button').css('background-color','dodgerblue')
+        playerHand = []
+        dealerHand = []
+        $('#display').empty()
+        $('#display').append('<h3>BLACKJACK! PLAYER WINS!</h3>');
+        begin()
+    }
+    else if(total > 21){
         console.log('Over 21, You lose!')
         refresh()
-        $('#player-hand').empty()
-        $('#dealer-hand').empty()
+        $('#display').empty()
+        $('#display').append('<h3>Player over 21! YOU LOSE!</h3>');
         $('#deal-button').prop("disabled",false);
-        $('#hit-button').prop("disabled",true);
+        // $('#hit-button').prop("disabled",true);
         $('#deal-button').css('background-color','dodgerblue')
-        swal({
-            title: "Over 21, You lose!",
-            text: "Play Again?",
-            // imageUrl: "img/chip.png"
-          });
-
+        playerHand = []
+        dealerHand = []
+        begin()
+    }
+    else if(total2 > 21){
+        console.log('Dealer over 21, You Win!')
+        refresh()
+        $('#display').empty()
+        $('#display').append('<h3>Dealer over 21! PLAYER WINS!</h3>');
+        $('#deal-button').prop("disabled",false);
+        // $('#hit-button').prop("disabled",true);
+        $('#deal-button').css('background-color','dodgerblue')
+        playerHand = []
+        dealerHand = []
+        begin()
     }else {
         console.log('keep going')
         console.log(total)
@@ -73,6 +105,7 @@ function Over(){
 
 
 function displayPoints(){
+    console.log(playerHand)
     total = Object.values(playerHand).reduce((t, n) => t + n.value, 0)
     $('#score_p').append(total)
     total2 = Object.values(dealerHand).reduce((t, n) => t + n.value, 0)
@@ -116,7 +149,6 @@ function Deck(){
 }
 
 Deck.prototype.draw = function(person) {
-    console.log('test')
     var cardObject;
     var randomIndex = parseInt(Math.random() * (this.cards.length));
     cardObject = this.cards[randomIndex];
@@ -139,7 +171,6 @@ Deck.prototype.draw = function(person) {
 
 var deck = new Deck();
 function deal() {
-
     // Deal 4 cards
     // var deck = new Deck();
     console.log(deck)
@@ -153,8 +184,56 @@ function hit() {
     deck.draw('player');
 }
 
-function stand(){
+function begin(){
+    $('#stand-button').prop("disabled",true);
+    $('#stand-button').css('background-color','gray');
     $('#hit-button').prop("disabled",true);
     $('#hit-button').css('background-color','gray');
 }
 
+function after(){
+    $('#stand-button').prop("disabled",false);
+    $('#stand-button').css('background-color','dodgerblue')
+    $('#hit-button').prop("disabled",false);
+    $('#hit-button').css('background-color','dodgerblue')
+}
+
+function stand(){
+    console.log(total2)
+    if(total2 < 17){
+        deck.draw('dealer')
+        displayPoints()
+        console.log(total2)
+        winner()
+    } else if(total2 >=17){
+        displayPoints()
+        winner()
+    }
+}
+
+function welcome(){
+    swal({
+        title: "Welcome!",
+        text: "Play some Blackjack!",
+        // imageUrl: "img/chip.png"
+      });
+}
+
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
