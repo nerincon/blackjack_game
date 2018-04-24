@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    // welcome()
+    welcome()
     begin()
     $('.foo').click(function () {
         var elem = event.target.id
@@ -18,7 +18,6 @@ $(document).ready(function() {
             hit();
         } else {
             stand();
-            // winner();
         }
         refresh();
         displayPoints();
@@ -50,8 +49,6 @@ function winner(){
             title: "Draw!",
           });
     }
-    // $('#player-hand').children().remove();
-    // $('#dealer-hand').children().remove();
     $('#deal-button').prop("disabled",false);
     $('#deal-button').css('background-color','dodgerblue')
     playerHand = []
@@ -63,10 +60,7 @@ function winner(){
 function over(){
     if(total === 21){
         refresh()
-        $('#player-hand').children().remove();
-        $('#dealer-hand').children().remove();
         $('#deal-button').prop("disabled",false);
-        // $('#hit-button').prop("disabled",true);
         $('#deal-button').css('background-color','dodgerblue')
         playerHand = []
         dealerHand = []
@@ -82,7 +76,6 @@ function over(){
         console.log(playerHand);
         console.log(total)
         $('#deal-button').prop("disabled",false);
-        // $('#hit-button').prop("disabled",true);
         $('#deal-button').css('background-color','dodgerblue')
         playerHand = []
         dealerHand = []
@@ -94,7 +87,6 @@ function over(){
         $('#display').empty()
         $('#display').append('<h3>Dealer over 21! PLAYER WINS!</h3>');
         $('#deal-button').prop("disabled",false);
-        // $('#hit-button').prop("disabled",true);
         $('#deal-button').css('background-color','dodgerblue')
         playerHand = []
         dealerHand = []
@@ -106,11 +98,46 @@ function over(){
 }
 
 
+function ace_p(){
+    var keyToFind = 'A';
+    for(var i in playerHand){
+        if(playerHand[i].name === keyToFind){
+            if(total > 21){
+                total -= 10
+                console.log(total + ' player')
+                return
+            }
+            else{
+                console.log("no 'A' in playerHand")
+            }
+        }
+    }
+}
+
+function ace_d(){
+    var keyToFind = 'A';
+    for(var i in dealerHand){
+        if(dealerHand[i].name === keyToFind){
+            if(total2 > 21){
+                total2 -= 10
+                console.log(total2 + ' dealer')
+                return
+            }
+            else{
+                console.log("no 'A' in dealerHand")
+            }
+        }
+    }
+}
+
+
 function displayPoints(){
     console.log(playerHand)
     total = Object.values(playerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
+    ace_p()
     $('#score_p').append(total)
     total2 = Object.values(dealerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
+    ace_d()
     $('#score_d').append(total2)
 }
 
@@ -132,7 +159,7 @@ Card.prototype.getImageUrl = function(){
 
 
 function Deck(){
-    this.names = {'A': 1,'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7':7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10};
+    this.names = {'A': 11,'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7':7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10};
     this.suits = ['hearts','diamonds','spades','clubs'];
     this.cards = [];
 
@@ -232,4 +259,4 @@ function shuffle(array) {
     }
   
     return array;
-  }
+}
