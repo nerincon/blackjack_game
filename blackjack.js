@@ -9,19 +9,28 @@ $(document).ready(function() {
             $('#display').append("<h2>Let's Play Some Blackjack!</h2>")
             $('#player-hand').children().remove();
             $('#dealer-hand').children().remove();
+            playerHand = []
+            dealerHand = []
             deal();
+            $('#score_d').hide()
             var input = this;
             input.disabled = true;
             $(this).css('background-color','gray');
             after();
         }else if (elem === 'hit-button'){
             hit();
-        } else {
+        } if(elem === 'stand-button') {
+            flipHoleCard();
             stand();
+            displayPoints()
+            $('#score_d').show()
+        }else{
+            refresh();
+            displayPoints()
+            over();
         }
         refresh();
         displayPoints();
-        over();
     });
 });
 
@@ -51,8 +60,6 @@ function winner(){
     }
     $('#deal-button').prop("disabled",false);
     $('#deal-button').css('background-color','dodgerblue')
-    playerHand = []
-    dealerHand = []
     displayPoints()
     begin()
 }
@@ -62,8 +69,6 @@ function over(){
         refresh()
         $('#deal-button').prop("disabled",false);
         $('#deal-button').css('background-color','dodgerblue')
-        playerHand = []
-        dealerHand = []
         $('#display').empty()
         $('#display').append('<h2>BLACKJACK! PLAYER WINS!</h2>');
         begin()
@@ -77,8 +82,6 @@ function over(){
         console.log(total)
         $('#deal-button').prop("disabled",false);
         $('#deal-button').css('background-color','dodgerblue')
-        playerHand = []
-        dealerHand = []
         begin()
     }
     else if(total2 > 21){
@@ -88,13 +91,15 @@ function over(){
         $('#display').append('<h2>Dealer over 21! PLAYER WINS!</h2>');
         $('#deal-button').prop("disabled",false);
         $('#deal-button').css('background-color','dodgerblue')
-        playerHand = []
-        dealerHand = []
         begin()
     }else {
         console.log('keep going')
         console.log(total)
     }
+}
+
+function turn(){
+
 }
 
 
@@ -154,9 +159,17 @@ function Card(value, name, suit){
 
 Card.prototype.getImageUrl = function(){
     var name = this.name;
-    return '<img class="cards" src="./img/' + name + '_of_' + this.suit + '.png">';
+    var suit = this.suit;
+    return '<img class="cards" src="./img/' + name + '_of_' + suit + '.png">';
 };
 
+
+function flipHoleCard() {
+    var name = dealerHand[0].name
+    var suit = dealerHand[0].suit
+    var actualCardSrc = './img/' + name + '_of_' + suit + '.png';
+    $('#dealer-hand :first-child').attr('src', actualCardSrc);
+}
 
 function Deck(){
     this.names = {'A': 11,'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7':7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10};
@@ -195,10 +208,10 @@ Deck.prototype.draw = function(person) {
 var deck = new Deck();
 function deal() {
     // Deal 4 cards
-    // var deck = new Deck();
     console.log(deck)
     deck.draw('player');
     deck.draw('dealer');
+    $('#dealer-hand :first-child').attr('src', './img/joker.png');
     deck.draw('player');
     deck.draw('dealer');
 }
@@ -238,7 +251,7 @@ function welcome(){
     swal({
         title: "Welcome!",
         text: "Play some Blackjack!",
-        // imageUrl: "img/chip.png"
+        imageUrl: "./img/hangover.gif"
       });
 }
 

@@ -40,6 +40,7 @@ h1 {
     height: 100px;
     background-color: rgb(84, 255, 62);
     margin: auto;
+    border-radius: 10px;
 }
 #dealer-label, #player-label {
     display: block;
