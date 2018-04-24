@@ -1,100 +1,122 @@
 body {
-    background-image: url("bricks.jpg");
+    background: url('./img/vegas.jpeg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
+    height: 100%;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+
+body {
     font-family: 'Aldrich', sans-serif;
+    text-align: center;
+    background-color: #EFEFEF;
 }
 
 h1 {
-    text-align: center;
-    padding-top: 10px;
+    letter-spacing: 0.3em;
+    padding-top: 100px;
+}
+#display h2 {
+    margin: 0;
+    padding-top: 30px;
+    color: black;
+    text-transform: uppercase;
+    font-weight: 400;
 }
 
 #table {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
+    margin: auto;
+    height: 440px;
+    width: 700px;
     background-color: lightgreen;
-    margin-left: 26%;
-    margin-right: 25%;
-    margin-top: 1.5%;
-    width: 40em;
-    height: 30em;
-    border-radius: 2%;
-    border: 3px solid black;
-    box-shadow: 5px 10px 8px 10px #888888;
-    overflow: hidden;
+    border-radius: 20px;
 }
-
-#dealer {
-    padding-top:1em;
-    padding-right: 30em;
-
-}
-
-#dealer-hand {
+#dealer-hand, #player-hand {
+    width: 600px;
+    height: 100px;
     background-color: rgb(84, 255, 62);
-    width: 33em;
-    height: 7em;
-    border: 2px solid black;
-    position: absolute;
-    margin-top: 7em;
-    margin-left: 2.6em;
+    margin: auto;
+}
+#dealer-label, #player-label {
+    display: block;
+    color: black;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: left;
+    width: 600px;
+    margin: 10px auto 10px;
 }
 
-#player {
-    padding-top:10em;
-    padding-right: 30em;
-}
-
-#player-hand {
-    background-color: rgb(84, 255, 62);
-    width: 33em;
-    height: 7em;
-    border: 2px solid black;
-    position: absolute;
-    margin-top: 18em;
-    margin-left: 2.6em;
-}
-
-.buttons {
-    position: absolute;
-    padding-top: 27em;
-    padding-left: 16em;
-    border-radius: 5%;
-}
-
-#deal-button {
+.buttons button {
+    color: black;
+    width: 147px;
     background-color: dodgerblue;
-    font-size: 16px;
-    color: white;
-    padding: 4px;
+    border: none;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    margin-top: 22px;
+    vertical-align: top;
+    height: 50px;
+}
+.buttons button:hover {
+    opacity: 0.7;
+    transition: 1s;
+    cursor: pointer;
+}
+.buttons button:focus {
+    outline: none;
+    border: none;
 }
 
-#hit-button {
-    background-color: dodgerblue;
-    font-size: 16px;
-    color: white;
-    padding: 4px;
+.hand img {
+    text-align: left;
+    padding-top: 5px;
+    height: 90%;
+    margin-left: -20px;
+    padding-right: 28px;
+}
+.hand :first-child {
+    margin: 0;
 }
 
-#stand-button {
-    background-color: dodgerblue;
-    font-size: 16px;
-    color: white;
-    padding: 4px;
-}
+@media (max-width: 650px) {
+    h1 {
+        font-size: 23px
+    }
+    h2 {
+        font-size: 20px;
+    }
+    #table {
+        border-radius: 5px;
+        height: 376px;
+    }
+    #table, .buttons, .betting {
+        width: 100%;
+    }
+    #dealer-hand, #player-hand {
+        height: 75px;
+    }
+    .hand img {
+        margin-left: -15px;
+    }
+    #dealer-hand, #player-hand, #player-label, #dealer-label {
+        width: 95%;
+    }
+    #player-label, #dealer-label {
+        margin-left: 10px;
+    }
+    .buttons button {
+        margin-top: 18px;
+        font-size: 13px;
+        width: 22.5%;
+        padding: 12px 0px;
+    }
 
-.cards {
-    height:7em;
-    display: inline-block;
-}
 
-.score{
-    padding-left:2px;
-}
-
-#display{
-    display: flex;
-    justify-content: center;
-    padding-top: 15px;
 }

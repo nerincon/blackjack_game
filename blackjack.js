@@ -6,7 +6,7 @@ $(document).ready(function() {
         if (elem === 'deal-button'){
             deck = new Deck()
             $('#display').empty()
-            $('#display').append("<h3>Let's Play Some Blackjack!</h3>")
+            $('#display').append("<h2>Let's Play Some Blackjack!</h2>")
             $('#player-hand').children().remove();
             $('#dealer-hand').children().remove();
             deal();
@@ -34,16 +34,16 @@ function winner(){
     if(total ===21 && total2 === 21 || total2 > 21){
         console.log('player wins')
         $('#display').empty()
-        $('#display').append('<h3>PLAYER WINS!</h3>');
+        $('#display').append('<h2>PLAYER WINS!</h2>');
     } 
     else if(total > total2){
         console.log('player wins')
         $('#display').empty()
-        $('#display').append('<h3>PLAYER WINS!</h3>');
+        $('#display').append('<h2>PLAYER WINS!</h2>');
     } else if (total2 > total) {
         console.log('dealer wins')
         $('#display').empty()
-        $('#display').append('<h3>DEALER WINS!</h3>');
+        $('#display').append('<h2>DEALER WINS!</h2>');
     } else {
         swal({
             title: "Draw!",
@@ -65,14 +65,14 @@ function over(){
         playerHand = []
         dealerHand = []
         $('#display').empty()
-        $('#display').append('<h3>BLACKJACK! PLAYER WINS!</h3>');
+        $('#display').append('<h2>BLACKJACK! PLAYER WINS!</h2>');
         begin()
     }
     else if(total > 21){
         console.log('Over 21, You lose!')
         refresh()
         $('#display').empty()
-        $('#display').append('<h3>Player over 21! YOU LOSE!</h3>');
+        $('#display').append('<h2>Player over 21! YOU LOSE!</h2>');
         console.log(playerHand);
         console.log(total)
         $('#deal-button').prop("disabled",false);
@@ -85,7 +85,7 @@ function over(){
         console.log('Dealer over 21, You Win!')
         refresh()
         $('#display').empty()
-        $('#display').append('<h3>Dealer over 21! PLAYER WINS!</h3>');
+        $('#display').append('<h2>Dealer over 21! PLAYER WINS!</h2>');
         $('#deal-button').prop("disabled",false);
         $('#deal-button').css('background-color','dodgerblue')
         playerHand = []
