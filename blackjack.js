@@ -275,13 +275,13 @@ function stand(){
 function welcome(){
     swal({
         title: "Welcome!",
-        text: "Play some Blackjack!",
+        text: "The casino gave you a $5000 marker. \nPlace your bet before you deal! Good luck",
         imageUrl: "./img/hangover2.gif"
       });
 }
 
 function Bets() {
-    this.pot = 200;
+    this.pot = 5000;
     this.bet = 0;
     $('#bet').text('$' + 0);
     $('#pot').text('$' + this.pot);
@@ -320,4 +320,5 @@ function outOfChips() {
         title: "You don't have enough poker chips!",
         text: "Sorry!",
       });
+      setTimeout(function () { location.reload(); }, 4000);
 }
