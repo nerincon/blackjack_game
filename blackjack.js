@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    disable();
     welcome()
     begin()
     $('.foo').click(function () {
@@ -31,12 +32,29 @@ $(document).ready(function() {
         }
         refresh();
         displayPoints();
+        disable();
     });
+    $('#ten').click(function() {bets.addBet(10);enable();});
+    $('#fifty').click(function() {bets.addBet(50);enable()});
+    $('#hundred').click(function() {bets.addBet(100);enable()});
 });
 
-var playerHand = []
-var dealerHand = []
 
+
+
+function enable(){
+    $('#deal-button').prop("disabled",false);
+    $('#deal-button').css('background-color','dodgerblue');
+}
+
+function disable(){
+    $('#deal-button').prop("disabled",true);
+    $('#deal-button').css('background-color','gray');
+}
+
+var playerHand = [];
+var dealerHand = [];
+var bets = new Bets();
 
 
 function winner(){
@@ -44,15 +62,18 @@ function winner(){
         console.log('player wins')
         $('#display').empty()
         $('#display').append('<h2>PLAYER WINS!</h2>');
+        bets.winner();
     } 
     else if(total > total2){
         console.log('player wins')
         $('#display').empty()
         $('#display').append('<h2>PLAYER WINS!</h2>');
+        bets.winner();
     } else if (total2 > total) {
         console.log('dealer wins')
         $('#display').empty()
         $('#display').append('<h2>DEALER WINS!</h2>');
+        bets.loser();
     } else {
         swal({
             title: "Draw!",
@@ -72,6 +93,7 @@ function over(){
         $('#display').empty()
         $('#display').append('<h2>BLACKJACK! PLAYER WINS!</h2>');
         begin()
+        bets.winner();
     }
     else if(total > 21){
         console.log('Over 21, You lose!')
@@ -83,6 +105,7 @@ function over(){
         $('#deal-button').prop("disabled",false);
         $('#deal-button').css('background-color','dodgerblue')
         begin()
+        bets.loser();
     }
     else if(total2 > 21){
         console.log('Dealer over 21, You Win!')
@@ -92,14 +115,11 @@ function over(){
         $('#deal-button').prop("disabled",false);
         $('#deal-button').css('background-color','dodgerblue')
         begin()
+        bets.winner();
     }else {
         console.log('keep going')
         console.log(total)
     }
-}
-
-function turn(){
-
 }
 
 
@@ -257,5 +277,47 @@ function welcome(){
         title: "Welcome!",
         text: "Play some Blackjack!",
         imageUrl: "./img/hangover2.gif"
+      });
+}
+
+function Bets() {
+    this.pot = 200;
+    this.bet = 0;
+    $('#bet').text('$' + 0);
+    $('#pot').text('$' + this.pot);
+}
+
+Bets.prototype.updateAmounts = function () {
+    $('#bet').text('$' + this.bet);
+    $('#pot').text('$' + this.pot);
+};
+
+Bets.prototype.addBet = function(amount) {
+    if (this.pot >= amount) {
+        this.pot = this.pot - amount;
+        this.bet = this.bet + amount;
+        this.updateAmounts();
+        // $('#deal-button').removeClass('disabled');
+    } else {
+        outOfChips();
+    }
+};
+
+Bets.prototype.winner = function(){
+    this.pot += this.bet * 2;
+    this.bet = 0;
+    this.updateAmounts();
+}
+
+Bets.prototype.loser = function(){
+    this.bet = 0;
+    this.updateAmounts();
+}
+
+
+function outOfChips() {
+    swal({
+        title: "You don't have enough poker chips!",
+        text: "Sorry!",
       });
 }
