@@ -5,8 +5,6 @@ body {
     -o-background-size: cover;
     background-size: cover;
     height: 100%;
-    overflow: hidden;
-    background-repeat: no-repeat;
 }
 
 
@@ -18,7 +16,7 @@ body {
 
 h1 {
     letter-spacing: 0.3em;
-    padding-top: 100px;
+    padding-top: 50px;
 }
 #display h2 {
     margin: 0;
@@ -86,7 +84,51 @@ h1 {
     margin: 0;
 }
 
-@media (max-width: 650px) {
+.betting {
+    margin: 20px auto;
+    height: 150px;
+    width: 700px;
+    background-color: #d9dbdd;
+    border-radius: 15px;
+}
+.betting div {
+    display: inline-block;
+}
+.betting img {
+    height: 80px;
+    margin-top: 8px;
+    margin-right: 18px;
+}
+.betting img:hover {
+    cursor: pointer;
+}
+.bet-square {
+    float: left;
+    margin-left: 42px;
+}
+.pot-square {
+    float: right;
+    margin-right: 47px;
+}
+.bet-square, .pot-square {
+    font-weight: 800;
+    font-size: 23px;
+    margin-top: -8px;
+    width: 100px;
+    letter-spacing: 0.1em;
+    color: #484e56;
+    text-transform: uppercase;
+}
+#pot, #bet {
+    margin-top: -24px;
+    margin-left: -5px;
+}
+
+.chips {
+    padding-top: 25px;
+}
+
+@media (max-width: 660px) {
     h1 {
         font-size: 23px
     }
@@ -118,6 +160,38 @@ h1 {
         width: 22.5%;
         padding: 12px 0px;
     }
+    .betting {
+        margin-top: 6px;
+        height: 180px;
+        border-radius: 5px;
+    }
+    .bet-square, .pot-square {
+        margin: 0;
+        float: none;
+        width: 200px;
+    }
+    .bet-square {
+        margin-top: 5px;
+    }
+    .bet-square p, .pot-square p {
+        margin: 0;
+        font-size: 15px;
+        display: inline-block;
+    }
+    #bet, #pot {
+        margin-left: 2px;
+    }
+    .betting img {
+        height: 67px;
+        margin-top: 10px;
+        margin-right: 3px;
+    }
+}
 
-
+@media (max-width: 420px) {
+    .betting {
+        margin-top: 6px;
+        height: 240px;
+        border-radius: 5px;
+    }
 }

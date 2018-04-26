@@ -4,7 +4,7 @@ $(document).ready(function() {
     $('.foo').click(function () {
         var elem = event.target.id
         if (elem === 'deal-button'){
-            deck = new Deck()
+            deck = new Deck();
             $('#display').empty()
             $('#display').append("<h2>Let's Play Some Blackjack!</h2>")
             $('#player-hand').children().remove();
@@ -205,7 +205,7 @@ Deck.prototype.draw = function(person) {
     return cardObject
 };
 
-var deck = new Deck();
+// var deck = new Deck();
 function deal() {
     // Deal 4 cards
     console.log(deck)
@@ -219,6 +219,7 @@ function deal() {
 function hit() {
     deck.draw('player');
 }
+
 
 function begin(){
     $('#stand-button').prop("disabled",true);
@@ -236,14 +237,18 @@ function after(){
 
 function stand(){
     console.log(total2)
-    if(total2 < 17){
-        deck.draw('dealer')
-        displayPoints()
-        console.log(total2)
-        winner()
-    } else if(total2 >=17){
-        displayPoints()
-        winner()
+    count = 0
+    while (count < 4){
+        if(total2 < 17){
+            deck.draw('dealer')
+            displayPoints()
+            console.log(total2)
+            winner()
+        } else if(total2 >=17){
+            displayPoints()
+            winner()
+        }
+        count += 1
     }
 }
 
@@ -251,25 +256,6 @@ function welcome(){
     swal({
         title: "Welcome!",
         text: "Play some Blackjack!",
-        imageUrl: "./img/hangover.gif"
+        imageUrl: "./img/hangover2.gif"
       });
-}
-
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-  
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-  
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-  
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-  
-    return array;
 }
