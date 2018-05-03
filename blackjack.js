@@ -1,3 +1,8 @@
+var playerHand = [];
+var dealerHand = [];
+var bets = new Bets();
+
+
 $(document).ready(function() {
     disable();
     welcome()
@@ -5,19 +10,7 @@ $(document).ready(function() {
     $('.foo').click(function () {
         var elem = event.target.id
         if (elem === 'deal-button'){
-            deck = new Deck();
-            $('#display').empty()
-            $('#display').append("<h2>Let's Play Some Blackjack!</h2>")
-            $('#player-hand').children().remove();
-            $('#dealer-hand').children().remove();
-            playerHand = []
-            dealerHand = []
-            deal();
-            $('#score_d').hide()
-            var input = this;
-            input.disabled = true;
-            $(this).css('background-color','gray');
-            after();
+            dealButtonClick()
         }else if (elem === 'hit-button'){
             hit();
         } if(elem === 'stand-button') {
@@ -39,23 +32,151 @@ $(document).ready(function() {
     $('#hundred').click(function() {bets.addBet(100);enable()});
 });
 
-
-
-
-function enable(){
-    $('#deal-button').prop("disabled",false);
-    $('#deal-button').css('background-color','dodgerblue');
+function welcome(){
+    swal({
+        title: "Welcome!",
+        text: "The casino gave you a $5000 marker. \nPlace your bet before you deal! Good luck!",
+        imageUrl: "./img/hangover2.gif"
+      });
 }
 
-function disable(){
-    $('#deal-button').prop("disabled",true);
-    $('#deal-button').css('background-color','gray');
+
+function Deck(){
+    this.names = {'A': 11,'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7':7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10};
+    this.suits = ['hearts','diamonds','spades','clubs'];
+    this.cards = [];
+
+    for( var s = 0; s < this.suits.length; s++ ) {
+        for (const [key, value] of Object.entries(this.names)) {
+            this.cards.push( new Card( `${value}`, `${key}`, this.suits[s] ) );
+        }
+    }
+    // console.log(this.cards);
 }
 
-var playerHand = [];
-var dealerHand = [];
-var bets = new Bets();
+Deck.prototype.draw = function(person) {
+    var cardObject;
+    var randomIndex = parseInt(Math.random() * (this.cards.length));
+    cardObject = this.cards[randomIndex];
+    console.log(cardObject)
 
+    if (person === 'player') {
+        playerHand.push(cardObject);
+        cardToPlay = cardObject.getImageUrl();
+        $('#player-hand').append(cardToPlay);
+    } else {
+        dealerHand.push(cardObject);
+        cardToPlay = cardObject.getImageUrl();
+        $('#dealer-hand').append(cardToPlay);
+    }
+      this.cards.splice(randomIndex, 1);
+    //   console.log(this.cards)
+  
+    return cardObject
+};
+
+function Card(value, name, suit){
+	this.value = value;
+	this.name = name;
+	this.suit = suit;
+}
+
+Card.prototype.getImageUrl = function(){
+    var name = this.name;
+    var suit = this.suit;
+    return '<img class="cards" src="./img/' + name + '_of_' + suit + '.png">';
+};
+
+function Bets() {
+    this.pot = 5000;
+    this.bet = 0;
+    $('#bet').text('$' + 0);
+    $('#pot').text('$' + this.pot);
+}
+
+Bets.prototype.updateAmounts = function () {
+    $('#bet').text('$' + this.bet);
+    $('#pot').text('$' + this.pot);
+};
+
+Bets.prototype.addBet = function(amount) {
+    if (this.pot >= amount) {
+        this.pot = this.pot - amount;
+        this.bet = this.bet + amount;
+        this.updateAmounts();
+        // $('#deal-button').removeClass('disabled');
+    } else {
+        outOfChips();
+    }
+};
+
+Bets.prototype.winner = function(){
+    this.pot += this.bet * 2;
+    this.bet = 0;
+    this.updateAmounts();
+}
+
+Bets.prototype.loser = function(){
+    this.bet = 0;
+    this.updateAmounts();
+}
+
+
+function outOfChips() {
+    swal({
+        title: "You don't have enough poker chips!",
+        text: "Sorry!",
+      });
+      setTimeout(function () { location.reload(); }, 4000);
+}
+
+function dealButtonClick(){
+    deck = new Deck();
+    $('#display').empty()
+    $('#display').append("<h2>Let's Play Some Blackjack!</h2>")
+    $('#player-hand').children().remove();
+    $('#dealer-hand').children().remove();
+    playerHand = []
+    dealerHand = []
+    deal();
+    $('#score_d').hide()
+    var input = this;
+    input.disabled = true;
+    $(this).css('background-color','gray');
+    after();
+}
+
+// var deck = new Deck();
+function deal() {
+    // Deal 4 cards
+    console.log(deck)
+    deck.draw('player');
+    deck.draw('dealer');
+    $('#dealer-hand :first-child').attr('src', './img/joker.png');
+    deck.draw('player');
+    deck.draw('dealer');
+}
+
+function hit() {
+    deck.draw('player');
+}
+
+function stand(){
+    console.log(total2)
+    count = 0
+    while (count < 4){
+        if(total2 < 17){
+            deck.draw('dealer')
+            displayPoints()
+            console.log(total2)
+            winner()
+        } else if(total2 >=17){
+            displayPoints()
+            winner()
+        }
+        count += 1
+    }
+}
 
 function winner(){
     if(total ===21 && total2 === 21 || total2 > 21){
@@ -122,6 +243,33 @@ function over(){
     }
 }
 
+function flipHoleCard() {
+    var name = dealerHand[0].name
+    var suit = dealerHand[0].suit
+    var actualCardSrc = './img/' + name + '_of_' + suit + '.png';
+    $('#dealer-hand :first-child').attr('src', actualCardSrc);
+}
+
+function displayPoints(){
+    console.log(playerHand)
+    total = Object.values(playerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
+    ace_p()
+    $('#score_p').append(total)
+    total2 = Object.values(dealerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
+    ace_d()
+    $('#score_d').append(total2)
+}
+
+function enable(){
+    $('#deal-button').prop("disabled",false);
+    $('#deal-button').css('background-color','dodgerblue');
+}
+
+function disable(){
+    $('#deal-button').prop("disabled",true);
+    $('#deal-button').css('background-color','gray');
+}
+
 
 function ace_p(){
     var keyToFind = 'A';
@@ -156,88 +304,9 @@ function ace_d(){
 }
 
 
-function displayPoints(){
-    console.log(playerHand)
-    total = Object.values(playerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
-    ace_p()
-    $('#score_p').append(total)
-    total2 = Object.values(dealerHand).reduce((t, n) => parseInt(t) + parseInt(n.value), 0)
-    ace_d()
-    $('#score_d').append(total2)
-}
-
 function refresh(){
     $('#score_p').empty()
     $('#score_d').empty()
-}
-
-function Card(value, name, suit){
-	this.value = value;
-	this.name = name;
-	this.suit = suit;
-}
-
-Card.prototype.getImageUrl = function(){
-    var name = this.name;
-    var suit = this.suit;
-    return '<img class="cards" src="./img/' + name + '_of_' + suit + '.png">';
-};
-
-
-function flipHoleCard() {
-    var name = dealerHand[0].name
-    var suit = dealerHand[0].suit
-    var actualCardSrc = './img/' + name + '_of_' + suit + '.png';
-    $('#dealer-hand :first-child').attr('src', actualCardSrc);
-}
-
-function Deck(){
-    this.names = {'A': 11,'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7':7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10};
-    this.suits = ['hearts','diamonds','spades','clubs'];
-    this.cards = [];
-
-    for( var s = 0; s < this.suits.length; s++ ) {
-        for (const [key, value] of Object.entries(this.names)) {
-            this.cards.push( new Card( `${value}`, `${key}`, this.suits[s] ) );
-        }
-    }
-    // console.log(this.cards);
-}
-
-Deck.prototype.draw = function(person) {
-    var cardObject;
-    var randomIndex = parseInt(Math.random() * (this.cards.length));
-    cardObject = this.cards[randomIndex];
-    console.log(cardObject)
-
-    if (person === 'player') {
-        playerHand.push(cardObject);
-        cardToPlay = cardObject.getImageUrl();
-        $('#player-hand').append(cardToPlay);
-    } else {
-        dealerHand.push(cardObject);
-        cardToPlay = cardObject.getImageUrl();
-        $('#dealer-hand').append(cardToPlay);
-    }
-      this.cards.splice(randomIndex, 1);
-    //   console.log(this.cards)
-  
-    return cardObject
-};
-
-// var deck = new Deck();
-function deal() {
-    // Deal 4 cards
-    console.log(deck)
-    deck.draw('player');
-    deck.draw('dealer');
-    $('#dealer-hand :first-child').attr('src', './img/joker.png');
-    deck.draw('player');
-    deck.draw('dealer');
-}
-
-function hit() {
-    deck.draw('player');
 }
 
 
@@ -253,72 +322,4 @@ function after(){
     $('#stand-button').css('background-color','dodgerblue')
     $('#hit-button').prop("disabled",false);
     $('#hit-button').css('background-color','dodgerblue')
-}
-
-function stand(){
-    console.log(total2)
-    count = 0
-    while (count < 4){
-        if(total2 < 17){
-            deck.draw('dealer')
-            displayPoints()
-            console.log(total2)
-            winner()
-        } else if(total2 >=17){
-            displayPoints()
-            winner()
-        }
-        count += 1
-    }
-}
-
-function welcome(){
-    swal({
-        title: "Welcome!",
-        text: "The casino gave you a $5000 marker. \nPlace your bet before you deal! Good luck",
-        imageUrl: "./img/hangover2.gif"
-      });
-}
-
-function Bets() {
-    this.pot = 5000;
-    this.bet = 0;
-    $('#bet').text('$' + 0);
-    $('#pot').text('$' + this.pot);
-}
-
-Bets.prototype.updateAmounts = function () {
-    $('#bet').text('$' + this.bet);
-    $('#pot').text('$' + this.pot);
-};
-
-Bets.prototype.addBet = function(amount) {
-    if (this.pot >= amount) {
-        this.pot = this.pot - amount;
-        this.bet = this.bet + amount;
-        this.updateAmounts();
-        // $('#deal-button').removeClass('disabled');
-    } else {
-        outOfChips();
-    }
-};
-
-Bets.prototype.winner = function(){
-    this.pot += this.bet * 2;
-    this.bet = 0;
-    this.updateAmounts();
-}
-
-Bets.prototype.loser = function(){
-    this.bet = 0;
-    this.updateAmounts();
-}
-
-
-function outOfChips() {
-    swal({
-        title: "You don't have enough poker chips!",
-        text: "Sorry!",
-      });
-      setTimeout(function () { location.reload(); }, 4000);
 }
